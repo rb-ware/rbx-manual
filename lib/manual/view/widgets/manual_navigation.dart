@@ -29,33 +29,69 @@ class ManualNavigation extends StatelessWidget {
           final isSelected = item.entry.id == selectedEntry.id;
           final textStyle = theme.textTheme.bodyMedium!.copyWith(
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500);
-          return InkWell(
+          return _ManualNavTile(
+            item: item,
+            isSelected: isSelected,
+            textStyle: textStyle,
             onTap: () => onSelect(item.entry),
-            child: Container(
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? AppColors.primary.withOpacity(0.1)
-                    : Colors.transparent,
-                border: isSelected
-                    ? Border(
-                        left: BorderSide(color: AppColors.primary, width: 4))
-                    : null,
-              ),
-              padding: EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 16 + item.depth * 16,
-              ),
-              child: Text(
-                item.entry.title,
-                style: textStyle.copyWith(
-                  color: isSelected
-                      ? AppColors.primary
-                      : AppColors.neutral.withOpacity(0.85),
-                ),
-              ),
-            ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _ManualNavTile extends StatefulWidget {
+  const _ManualNavTile({
+    required this.item,
+    required this.isSelected,
+    required this.textStyle,
+    required this.onTap,
+  });
+
+  final ManualNavItem item;
+  final bool isSelected;
+  final TextStyle textStyle;
+  final VoidCallback onTap;
+
+  @override
+  State<_ManualNavTile> createState() => _ManualNavTileState();
+}
+
+class _ManualNavTileState extends State<_ManualNavTile> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: InkWell(
+        onTap: widget.onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            color: widget.isSelected
+                ? AppColors.primary.withOpacity(0.1)
+                : Colors.transparent,
+            border: widget.isSelected
+                ? Border(left: BorderSide(color: AppColors.primary, width: 4))
+                : null,
+          ),
+          padding: EdgeInsets.symmetric(
+            vertical: 10,
+            horizontal: 16 + widget.item.depth * 16,
+          ),
+          child: Text(
+            widget.item.entry.title,
+            style: widget.textStyle.copyWith(
+              color: widget.isSelected
+                  ? AppColors.primary
+                  : (_hovered
+                      ? Colors.red
+                      : AppColors.neutral.withOpacity(0.85)),
+            ),
+          ),
+        ),
       ),
     );
   }

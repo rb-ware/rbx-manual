@@ -64,6 +64,7 @@ class _ManualPageState extends State<ManualPage> {
                         content: _findSectionContent(_selectedEntry.id),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 32, vertical: 36),
+                        onSelect: _onSelect,
                       ),
                     ),
                     Builder(builder: (context) {

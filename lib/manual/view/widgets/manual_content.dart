@@ -11,11 +11,13 @@ class ManualContentView extends StatelessWidget {
     required this.entry,
     this.content,
     this.padding = const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+    this.onSelect,
   });
 
   final ManualEntry entry;
   final ManualSectionContent? content;
   final EdgeInsetsGeometry padding;
+  final ValueChanged<ManualEntry>? onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -235,9 +237,9 @@ class ManualContentView extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(
-                        child.title,
-                        style: AppTypography.bodyMedium,
+                      child: _ChildNavTile(
+                        title: child.title,
+                        onTap: () => onSelect?.call(child),
                       ),
                     ),
                   ],
@@ -247,8 +249,39 @@ class ManualContentView extends StatelessWidget {
             .toList(),
       ),
       const SizedBox(height: 24),
-      const ManualContentPlaceholder(),
+      // const ManualContentPlaceholder(),
     ];
+  }
+}
+
+class _ChildNavTile extends StatefulWidget {
+  const _ChildNavTile({required this.title, required this.onTap});
+
+  final String title;
+  final VoidCallback? onTap;
+
+  @override
+  State<_ChildNavTile> createState() => _ChildNavTileState();
+}
+
+class _ChildNavTileState extends State<_ChildNavTile> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Text(
+          widget.title,
+          style: AppTypography.bodyMedium.copyWith(
+            color: _hovered ? Colors.red : null,
+          ),
+        ),
+      ),
+    );
   }
 }
 
