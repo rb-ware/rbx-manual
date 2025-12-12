@@ -16,7 +16,7 @@ class AppTypography {
   static TextStyle get appBarTitle => GoogleFonts.montserrat(
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color: AppColors.white,
+        color: AppColors.grey200,
       );
 
   static TextStyle get bodyMedium => GoogleFonts.montserrat(

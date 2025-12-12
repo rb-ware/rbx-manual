@@ -49,11 +49,11 @@ const manualToc = <ManualEntry>[
     id: '5-expansion-menu',
     title: '5. 확장 메뉴',
     children: [
-      ManualEntry(id: '5-1-wbing', title: '5-1. 위빙'),
+      ManualEntry(id: '5-1-weaving', title: '5-1. 위빙'),
       ManualEntry(id: '5-2-program-call', title: '5-2. 프로그램 콜'),
       ManualEntry(id: '5-3-shift', title: '5-3. 시프트'),
       ManualEntry(id: '5-4-jump', title: '5-4. 점프'),
-      ManualEntry(id: '5-5-dio-output', title: '5-5. D/A Output'),
+      ManualEntry(id: '5-5-da-output', title: '5-5. D/A Output'),
       ManualEntry(id: '5-6-welding-condition', title: '5-6. 용접 조건 일괄적용'),
       ManualEntry(id: '5-7-welding-change', title: '5-7. 용접 중 조건 변경기능'),
       ManualEntry(id: '5-8-appendix', title: '5-8. 부가축'),

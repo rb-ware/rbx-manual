@@ -14,15 +14,15 @@ class AppTheme {
 
     final colorScheme = baseColorScheme.copyWith(
       primary: AppColors.primary,
-      onPrimary: AppColors.white,
+      onPrimary: AppColors.grey200,
       secondary: AppColors.secondary,
-      onSecondary: AppColors.white,
+      onSecondary: AppColors.grey200,
       surface: AppColors.surface,
       onSurface: AppColors.neutral,
-      background: AppColors.white,
+      background: AppColors.grey200,
       onBackground: AppColors.neutral,
       error: AppColors.primary,
-      onError: AppColors.white,
+      onError: AppColors.grey200,
     );
 
     final textTheme = AppTypography.textTheme();
@@ -30,7 +30,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: AppColors.white,
+      scaffoldBackgroundColor: AppColors.grey200,
       textTheme: textTheme,
       appBarTheme: AppBarTheme(
         backgroundColor: colorScheme.primary,
