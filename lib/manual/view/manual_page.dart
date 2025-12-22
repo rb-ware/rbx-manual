@@ -280,6 +280,9 @@ class _LanguageDropdown extends StatelessWidget {
         final compactByScreen = MediaQuery.sizeOf(context).width < 420;
         final isCompact = compactByWidth || compactByScreen;
 
+        const koLabel = '한국어';
+        const enLabel = 'English';
+
         final textStyle = TextStyle(
           color: Colors.white,
           fontSize: isCompact ? 12 : 14,
@@ -317,7 +320,7 @@ class _LanguageDropdown extends StatelessWidget {
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        isCompact ? 'KO' : '한국어',
+                        koLabel,
                         style: textStyle,
                         maxLines: 1,
                       ),
@@ -326,7 +329,7 @@ class _LanguageDropdown extends StatelessWidget {
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        isCompact ? 'EN' : 'English',
+                        enLabel,
                         style: textStyle,
                         maxLines: 1,
                       ),
@@ -336,9 +339,33 @@ class _LanguageDropdown extends StatelessWidget {
                     if (v == null) return;
                     onChanged(v);
                   },
-                  items: const [
-                    DropdownMenuItem(value: 'ko', child: Text('한국어')),
-                    DropdownMenuItem(value: 'en', child: Text('English')),
+                  items: [
+                    DropdownMenuItem(
+                      value: 'ko',
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          koLabel,
+                          maxLines: 1,
+                          softWrap: false,
+                          overflow: TextOverflow.visible,
+                        ),
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: 'en',
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          enLabel,
+                          maxLines: 1,
+                          softWrap: false,
+                          overflow: TextOverflow.visible,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
