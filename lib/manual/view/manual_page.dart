@@ -50,7 +50,18 @@ class _ManualPageState extends State<ManualPage> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('RB X Manual'),
+            title: LayoutBuilder(
+              builder: (context, constraints) {
+                return ConstrainedBox(
+                  constraints: constraints,
+                  child: const FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text('RB X Manual', maxLines: 1),
+                  ),
+                );
+              },
+            ),
             actions: [
               _LanguageDropdown(
                 value: _lang,
@@ -202,7 +213,18 @@ class _CompactManualPageState extends State<_CompactManualPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('RB X Manual'),
+        title: LayoutBuilder(
+          builder: (context, constraints) {
+            return ConstrainedBox(
+              constraints: constraints,
+              child: const FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text('RB X Manual', maxLines: 1),
+              ),
+            );
+          },
+        ),
         actions: [
           _LanguageDropdown(
             value: widget.lang,
@@ -252,19 +274,41 @@ class _LanguageDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isNarrow = MediaQuery.sizeOf(context).width < 420;
+    final textStyle = TextStyle(
+      color: Colors.white,
+      fontSize: isNarrow ? 12 : 14,
+    );
+
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          'Language',
-          style: const TextStyle(color: Colors.white),
-        ),
-        const SizedBox(width: 12),
+        if (isNarrow)
+          const Icon(
+            Icons.language,
+            size: 20,
+            color: Colors.white,
+          )
+        else
+          Text(
+            'Language',
+            style: textStyle,
+          ),
+        SizedBox(width: isNarrow ? 6 : 12),
         DropdownButtonHideUnderline(
           child: DropdownButton<String>(
             value: value,
-            style: const TextStyle(color: Colors.white),
+            isDense: true,
+            style: textStyle,
             iconEnabledColor: Colors.white,
+            iconSize: isNarrow ? 18 : 24,
             dropdownColor: Colors.black87,
+            selectedItemBuilder: isNarrow
+                ? (context) => const [
+                      Text('KO', style: TextStyle(color: Colors.white)),
+                      Text('EN', style: TextStyle(color: Colors.white)),
+                    ]
+                : null,
             onChanged: (v) {
               if (v == null) return;
               onChanged(v);
