@@ -570,6 +570,11 @@ const manualSectionContentsEn = <ManualSectionContent>[
   ManualSectionContent(
     entryId: '5-6-welding-condition',
     blocks: [
+      ManualContentBlock.image(
+        'assets/rbx-screens/batch-weld-mod.png',
+        maxWidth: 600,
+        caption: 'Batch Weld Mod Screen',
+      ),
       ManualContentBlock.paragraph(
         'This function allows you to set the weld condition properties of multiple Weld Start and Weld End commands in the program at once.',
       ),

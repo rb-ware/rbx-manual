@@ -573,6 +573,11 @@ const manualSectionContentsKo = <ManualSectionContent>[
   ManualSectionContent(
     entryId: '5-6-welding-condition',
     blocks: [
+      ManualContentBlock.image(
+        'assets/rbx-screens/batch-weld-mod.png',
+        maxWidth: 600,
+        caption: 'Batch Weld Mod 화면',
+      ),
       ManualContentBlock.paragraph(
         '이 기능은 프로그램에 등록된 여러 Weld Start와 Weld End 명령의 용접 조건 속성을 한 번에 설정할 수 있도록 해줍니다.',
       ),
