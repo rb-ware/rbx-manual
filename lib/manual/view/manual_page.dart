@@ -274,52 +274,78 @@ class _LanguageDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isNarrow = MediaQuery.sizeOf(context).width < 420;
-    final textStyle = TextStyle(
-      color: Colors.white,
-      fontSize: isNarrow ? 12 : 14,
-    );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compactByWidth = constraints.maxWidth < 170;
+        final compactByScreen = MediaQuery.sizeOf(context).width < 420;
+        final isCompact = compactByWidth || compactByScreen;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (isNarrow)
-          const Icon(
-            Icons.language,
-            size: 20,
-            color: Colors.white,
-          )
-        else
-          Text(
-            'Language',
-            style: textStyle,
-          ),
-        SizedBox(width: isNarrow ? 6 : 12),
-        DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-            value: value,
-            isDense: true,
-            style: textStyle,
-            iconEnabledColor: Colors.white,
-            iconSize: isNarrow ? 18 : 24,
-            dropdownColor: Colors.black87,
-            selectedItemBuilder: isNarrow
-                ? (context) => const [
-                      Text('KO', style: TextStyle(color: Colors.white)),
-                      Text('EN', style: TextStyle(color: Colors.white)),
-                    ]
-                : null,
-            onChanged: (v) {
-              if (v == null) return;
-              onChanged(v);
-            },
-            items: const [
-              DropdownMenuItem(value: 'ko', child: Text('한국어')),
-              DropdownMenuItem(value: 'en', child: Text('English')),
-            ],
-          ),
-        ),
-      ],
+        final textStyle = TextStyle(
+          color: Colors.white,
+          fontSize: isCompact ? 12 : 14,
+        );
+
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (isCompact)
+              const Icon(
+                Icons.language,
+                size: 20,
+                color: Colors.white,
+              )
+            else
+              Text(
+                'Language',
+                style: textStyle,
+              ),
+            SizedBox(width: isCompact ? 6 : 12),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: isCompact ? 72 : 140,
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: value,
+                  isDense: true,
+                  style: textStyle,
+                  iconEnabledColor: Colors.white,
+                  iconSize: isCompact ? 18 : 24,
+                  dropdownColor: Colors.black87,
+                  selectedItemBuilder: (context) => [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        isCompact ? 'KO' : '한국어',
+                        style: textStyle,
+                        maxLines: 1,
+                      ),
+                    ),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        isCompact ? 'EN' : 'English',
+                        style: textStyle,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
+                  onChanged: (v) {
+                    if (v == null) return;
+                    onChanged(v);
+                  },
+                  items: const [
+                    DropdownMenuItem(value: 'ko', child: Text('한국어')),
+                    DropdownMenuItem(value: 'en', child: Text('English')),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
