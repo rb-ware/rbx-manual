@@ -198,16 +198,14 @@ git diff            # 수정된 내용 상세 확인
 
 ### 5. 변경 내용 저장(커밋)과 업로드(푸시)
 ```bash
-git add lib/manual/data/manual_content.dart
-git add lib/manual/data/manual_content_en.dart
-git add README.md
-
+git add .                  # 수정/추가/삭제한 모든 파일을 한 번에 스테이징
 git commit -m "Update welding condition manual"
 git push origin main
 ```
-- `git add` 는 수정한 파일을 커밋에 포함시키는 단계입니다.
+- `git add .` 는 현재 폴더 아래에서 변경된 모든 파일을 한 번에 커밋에 포함시킵니다.
 - `git commit` 메시지는 영어 한 줄로 작성하는 것을 권장합니다.
 - `git push` 후 GitHub에 로그인 정보 입력(또는 Personal Access Token 사용) 안내가 나오면 안내에 따라 입력하세요.
+- `main` 브랜치에 푸시하면 GitHub Actions가 자동으로 실행되어 웹 배포까지 완료됩니다.
 
 ### 6. 푸시 실패 시 해결
 - **메시지:** `rejected` 또는 `fetch first` → 다른 사람이 먼저 올렸으므로 `git pull origin main` 실행 후 충돌 해결 → 다시 5단계 수행
