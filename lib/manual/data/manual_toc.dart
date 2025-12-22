@@ -43,6 +43,10 @@ const manualToc = <ManualEntry>[
         id: '4-4-gripper-settings',
         title: '4-4. 용접기 설정',
       ),
+      ManualEntry(
+        id: '4-6-data-transfer',
+        title: '4-6. 데이터 전송',
+      ),
     ],
   ),
   ManualEntry(
@@ -57,6 +61,7 @@ const manualToc = <ManualEntry>[
       ManualEntry(id: '5-6-welding-condition', title: '5-6. 용접 조건 일괄적용'),
       ManualEntry(id: '5-7-welding-change', title: '5-7. 용접 중 조건 변경기능'),
       ManualEntry(id: '5-8-appendix', title: '5-8. 부가축'),
+      ManualEntry(id: '5-9-multipass', title: '5-9. 멀티패스'),
     ],
   ),
   ManualEntry(
@@ -75,5 +80,15 @@ const manualToc = <ManualEntry>[
   ManualEntry(
     id: '8-arc-teaching',
     title: '8. 곡선 티칭 방법',
+  ),
+  ManualEntry(
+    id: '9-welder',
+    title: '9. 용접기',
+    children: [
+      ManualEntry(id: '9-1-welder-kemppi-mig', title: '9-1. Kemppi (MIG)'),
+      ManualEntry(id: '9-2-welder-weco-mig', title: '9-2. WECO (MIG)'),
+      ManualEntry(id: '9-3-welder-imt-laser', title: '9-3. IMT (Laser)'),
+      ManualEntry(id: '9-4-welder-maven-laser', title: '9-4. Maven (Laser)'),
+    ],
   ),
 ];

@@ -1,8 +1,17 @@
 import 'package:flutter/widgets.dart';
 
 import '../models/manual_content.dart';
+import 'manual_content_en.dart' as en;
 
-const manualSectionContents = <ManualSectionContent>[
+// Build-time language selection. Default to Korean.
+const String kAppLang = String.fromEnvironment('APP_LANG', defaultValue: 'ko');
+
+// Keep the same symbol name used throughout the app.
+const manualSectionContents =
+    kAppLang == 'en' ? en.manualSectionContentsEn : manualSectionContentsKo;
+
+// Korean content embedded here as default
+const manualSectionContentsKo = <ManualSectionContent>[
   ManualSectionContent(
     entryId: '1-program-main-menu',
     blocks: [
@@ -17,7 +26,7 @@ const manualSectionContents = <ManualSectionContent>[
           ManualImageMarker(label: '4', alignment: Alignment(-0.94, 0.14)),
         ],
       ),
-      ManualContentBlock.paragraph('RB-MIG UI 구성은 크게 4가지로 분류됩니다.'),
+      ManualContentBlock.paragraph('RB-X UI 구성은 크게 4가지로 분류됩니다.'),
       ManualContentBlock.bullets([
         '1. Jog Control - 로봇을 직접적으로 컨트롤하는 영역입니다.',
         '2. Program View - 티칭중인 프로그램의 내용을 표시하고 속성을 볼 수 있는 영역입니다.',
@@ -29,7 +38,7 @@ const manualSectionContents = <ManualSectionContent>[
   ManualSectionContent(
     entryId: '2-robot-connection',
     blocks: [
-      ManualContentBlock.heading('RB-MIG 초기 연결'),
+      ManualContentBlock.heading('RB-X 초기 연결'),
       ManualContentBlock.annotatedImage(
         'assets/rbx-screens/rbx-setup.png',
         maxWidth: 600,
@@ -41,10 +50,10 @@ const manualSectionContents = <ManualSectionContent>[
           ManualImageMarker(label: '7', alignment: Alignment(-0.025, -0.1)),
         ],
       ),
-      ManualContentBlock.paragraph('RB-MIG 초기 연결 방법입니다.'),
+      ManualContentBlock.paragraph('RB-X 초기 연결 방법입니다.'),
       ManualContentBlock.bullets([
         '1. 태블릿 와이파이와 로봇 제어박스가 동일한 네트워크에 있는지 먼저 확인합니다.',
-        '2. RB-MIG 앱을 실행한 뒤 초기 화면 좌측의 Setup 버튼을 터치합니다.',
+        '2. RB-X 앱을 실행한 뒤 초기 화면 좌측의 Setup 버튼을 터치합니다.',
         '3. System Setup 버튼을 선택합니다.',
         '4. Select Robot Model을 RB_U로 설정합니다. (현재 판매 버전은 RB_U이며, 다른 버전은 로봇 버전에 맞게 선택)',
         '5. Select Language에서 사용할 언어를 지정합니다.',
@@ -223,6 +232,18 @@ const manualSectionContents = <ManualSectionContent>[
       ManualContentBlock.paragraph(
         '로봇과 통신할 용접기 모델을 선택합니다. 해당 설정은 용접 프로토콜 및 제어 신호 호환을 위해 필수입니다. 기본 출고 시 Analog 모드로 설정되어 있으며, 현재 사용 가능한 모델은 Analog, Kemppi 입니다.',
       ),
+      ManualContentBlock.heading('Enable Data Transfer'),
+      ManualContentBlock.paragraph(
+        '용접데이터 전송기능을 켜거나 끌 수 있습니다. (특정 업체를 위해 추가된 기능이며 일반적으로는 OFF로 설정합니다.)',
+      ),
+      ManualContentBlock.heading('Mini PC IP'),
+      ManualContentBlock.paragraph(
+        'Data Transfer 기능 혹은 LASER용접모드를 사용하기 위해 별도의 Mini PC가 필요하고 이 Mini PC의 IP를 설정하는 메뉴입니다. 기본값으로 사용하는 것을 권장합니다. (기본값 192.168.0.210)',
+      ),
+      ManualContentBlock.heading('Use Digital Channel for Tool Flange'),
+      ManualContentBlock.paragraph(
+        '구형 로봇의 경우 로봇 툴플렌지 커넥터에 연결이 불가능하여 제어박스의 Din 신호에 연결하여 RB-Ring을 사용하는데 이때 이 기능을 활성화하여 설정된 채널로 사용할 수 있다. (설정 시 기존 툴플렌지 신호 사용은 비활성화된다.)',
+      ),
     ],
   ),
   ManualSectionContent(
@@ -263,11 +284,10 @@ const manualSectionContents = <ManualSectionContent>[
   ManualSectionContent(
     entryId: '4-3-tcp-settings',
     blocks: [
-      ManualContentBlock.heading('TCP 설정 개요'),
       ManualContentBlock.paragraph(
         'TCP 설정은 로봇 토치의 끝점 위치를 정밀하게 보정해 작업 정확도를 높여주는 과정입니다.',
       ),
-      ManualContentBlock.heading('① Auto (자동 TCP 설정)'),
+      ManualContentBlock.heading('1. Auto (자동 TCP 설정)'),
       ManualContentBlock.image(
         'assets/rbx-screens/rbx-tcpset-auto1.png',
         caption: '자동 TCP 설정 자세 등록',
@@ -289,7 +309,7 @@ const manualSectionContents = <ManualSectionContent>[
       ManualContentBlock.note(
         '자동 설정이 실패 메시지를 표시하는 경우 각 자세가 충분히 정밀하지 않은 것이므로, 자세를 다시 맞추고 재시도하십시오.',
       ),
-      ManualContentBlock.heading('② Manual (수동 TCP 설정)'),
+      ManualContentBlock.heading('2. Manual (수동 TCP 설정)'),
       ManualContentBlock.annotatedImage(
         'assets/rbx-screens/rbx-tcpset-manual.png',
         caption: '수동 TCP 설정 화면',
@@ -379,6 +399,61 @@ const manualSectionContents = <ManualSectionContent>[
     ],
   ),
   ManualSectionContent(
+    entryId: '4-6-data-transfer',
+    blocks: [
+      ManualContentBlock.heading('데이터 전송'),
+      ManualContentBlock.paragraph(
+        '데이터 전송 기능은 로봇이 진행한 용접 프로그램의 데이터를 특정 서버로 전송하는 기능입니다.',
+      ),
+      ManualContentBlock.note(
+        '데이터를 받는 서버는 제공되지 않으며 고객사에서 별도로 준비해야 합니다.',
+      ),
+      ManualContentBlock.heading('전송되는 데이터'),
+      ManualContentBlock.bullets([
+        '문자열 1 (프로그램이 재생 완료되었을 때): complete|A|B|C|D|E|F',
+        '문자열 2 (프로그램이 재생 중에 종료되었을 때): stopplay|A|B|C|D|E|F',
+      ]),
+      ManualContentBlock.bullets([
+        'A: 재생한 파일명',
+        'B: 프로그램이 재생하는데 소요된 시간(런타임)',
+        'C: 프로그램 안에서 용접을 진행한 총 시간(노아크 실행일 경우 no로 표시됨)',
+        'D: 용접 구간 안에서 실측 전류값(아날로그 입력 0번)을 0.5초 단위로 수집하여 평균낸 값 ×100',
+        'E: 용접 구간 안에서 실측 전압값(아날로그 입력 1번)을 0.5초 단위로 수집하여 평균낸 값 ×10',
+        'F: 프로그램 실행 횟수(파일명과 관계없이 총 실행 횟수를 누적)',
+      ]),
+      ManualContentBlock.paragraph('예)'),
+      ManualContentBlock.bullets([
+        'complete|test|0:00:09.581577|6.69388|300.0|20.0|37',
+      ]),
+      ManualContentBlock.bullets([
+        '실행완료여부 | 파일명 | 전체실행시간 | 용접실행시간 | 전류측정값 평균 | 전압측정값 평균 | 총 실행횟수',
+      ]),
+      ManualContentBlock.heading('데이터 전송 기능 설정'),
+      ManualContentBlock.image(
+        'assets/rbx-screens/systemset-data-transfer.png',
+        caption: 'System Setup - Enable Data Transfer',
+        maxWidth: 600,
+      ),
+      ManualContentBlock.bullets([
+        '1. 이 기능은 Analog 모드에서만 지원됩니다.',
+        '2. 설정 > 시스템 설정에서 아래쪽의 Enable Data Transfer 기능을 On 해주세요.',
+        '3. 데이터 전송 역할을 담당하는 Mini PC IP 기본값은 192.168.0.210이며, 제공되는 Mini PC도 동일하게 IP가 세팅되어 출고됩니다.',
+        '4. 데이터를 받는 서버는 제공되지 않으며 고객사에서 직접 준비해야 합니다. IP 192.168.0.14, Port 9999를 사용하여 UDP 소켓 서버로 수신해야 합니다.',
+        '5. 네트워크는 192.168.0.x00x 대역을 사용해야 합니다.',
+      ]),
+      ManualContentBlock.heading('데이터 전송 기능 실행'),
+      ManualContentBlock.image(
+        'assets/rbx-screens/data-transfer-execute.png',
+        caption: '데이터 전송 실행 예시',
+        maxWidth: 400,
+      ),
+      ManualContentBlock.bullets([
+        '1. 데이터 전송 기능이 설정되어 있다면 용접 프로그램을 실행만 하면 자동으로 데이터가 전송됩니다.',
+        '2. 데이터를 전송하는 시점은 프로그램이 종료되는 시점이며, 위의 이미지와 같은 데이터를 UDP 소켓 서버로 전송합니다. (이미지의 IP는 테스트용이며 실제로는 192.168.0.14를 사용합니다.)',
+      ]),
+    ],
+  ),
+  ManualSectionContent(
     entryId: '5-1-weaving',
     blocks: [
       ManualContentBlock.paragraph(
@@ -396,11 +471,11 @@ const manualSectionContents = <ManualSectionContent>[
         ],
       ),
       ManualContentBlock.bullets([
-        '① Weaving Shape: 위빙의 모양을 설정합니다. 지원 형태는 Trapezoidal, Sine Wave, Triangle, C-Wave, Circle 입니다.',
-        '② Range(Line Number) 설정: 선택한 위빙을 적용할 프로그램 라인 번호 구간을 지정합니다. 지정 시 구간 앞에는 Weaving Start, 뒤에는 Weaving End 명령이 자동으로 추가됩니다.',
-        '③ 위빙 파라미터 입력: 화면 상단 그림의 각 파라미터 설명을 참고해 L1~Swing 항목 값을 입력합니다.',
-        '④ Set-Point1 / Set-Point2 설정: 로봇을 원하는 위치로 이동한 뒤 [Get] 버튼으로 좌표를 등록합니다. 좌표 확인이 필요하면 [Move] 버튼을 길게 눌러 해당 위치로 이동하고, [Swap] 버튼을 누르면 두 좌표가 서로 바뀝니다.',
-        '⑤ Apply: 설정을 확인한 뒤 화면 우측 상단 Apply 버튼을 눌러 적용을 완료합니다.',
+        '1. Weaving Shape: 위빙의 모양을 설정합니다. 지원 형태는 Trapezoidal, Sine Wave, Triangle, C-Wave, Circle 입니다.',
+        '2. Range(Line Number) 설정: 선택한 위빙을 적용할 프로그램 라인 번호 구간을 지정합니다. 지정 시 구간 앞에는 Weaving Start, 뒤에는 Weaving End 명령이 자동으로 추가됩니다.',
+        '3. 위빙 파라미터 입력: 화면 상단 그림의 각 파라미터 설명을 참고해 L1~Swing 항목 값을 입력합니다.',
+        '4. Set-Point1 / Set-Point2 설정: 로봇을 원하는 위치로 이동한 뒤 [Get] 버튼으로 좌표를 등록합니다. 좌표 확인이 필요하면 [Move] 버튼을 길게 눌러 해당 위치로 이동하고, [Swap] 버튼을 누르면 두 좌표가 서로 바뀝니다.',
+        '5. Apply: 설정을 확인한 뒤 화면 우측 상단 Apply 버튼을 눌러 적용을 완료합니다.',
       ]),
       ManualContentBlock.note(
         '주의: 위빙 기능은 반드시 용접 구간 내에 위치해야 올바르게 동작합니다.',
@@ -411,7 +486,7 @@ const manualSectionContents = <ManualSectionContent>[
     entryId: '5-2-program-call',
     blocks: [
       ManualContentBlock.paragraph(
-        '기존에 저장된 프로그램을 현재 스텝의 하위 프로그램으로 불러오는 기능입니다. (이 명령은 현재 등록만 가능하고 수정은 불가능합니다.)',
+        '기존에 저장된 프로그램을 현재 스텝의 하위 프로그램으로 불러오는 기능입니다.\n(이 명령은 현재 등록만 가능하고 수정은 불가능합니다.)',
       ),
     ],
   ),
@@ -433,12 +508,12 @@ const manualSectionContents = <ManualSectionContent>[
       ),
       ManualContentBlock.paragraph('아래는 사용법입니다.'),
       ManualContentBlock.bullets([
-        '① Range: Start 포인트와 End 포인트를 지정해 Shift를 적용할 라인 범위를 선택합니다.',
-        '② Shift Dist.: X, Y, Z 방향으로 이동시킬 거리를 직접 입력합니다.',
-        '③ Base / Move Point: 거리를 계산하기 어렵다면 Base Point(현재 위치)와 Move Point(목표 위치)를 각각 [Get] 버튼으로 등록하고 [Calc] 버튼을 눌러 Shift Dist. 값을 자동으로 계산합니다.',
-        '④ Shift Dist. 값이 준비되면 화면 우측 상단 Apply 버튼을 눌러 적용합니다.',
-        '⑤ Insert: 계산된 Shift 값을 새로운 포인트로 생성해 기존 스텝을 유지한 채 보정된 위치를 새로운 스텝으로 추가합니다.',
-        '⑥ Modify: 기존 스텝에 Shift 값을 덮어써서 바로 적용합니다.',
+        '1. Range: Start 포인트와 End 포인트를 지정해 Shift를 적용할 라인 범위를 선택합니다.',
+        '2. Shift Dist.: X, Y, Z 방향으로 이동시킬 거리를 직접 입력합니다.',
+        '3. Base / Move Point: 거리를 계산하기 어렵다면 Base Point(현재 위치)와 Move Point(목표 위치)를 각각 [Get] 버튼으로 등록하고 [Calc] 버튼을 눌러 Shift Dist. 값을 자동으로 계산합니다.',
+        '4. Shift Dist. 값이 준비되면 화면 우측 상단 Apply 버튼을 눌러 적용합니다.',
+        '5. Insert: 계산된 Shift 값을 새로운 포인트로 생성해 기존 스텝을 유지한 채 보정된 위치를 새로운 스텝으로 추가합니다.',
+        '6. Modify: 기존 스텝에 Shift 값을 덮어써서 바로 적용합니다.',
       ]),
     ],
   ),
@@ -549,6 +624,39 @@ const manualSectionContents = <ManualSectionContent>[
     ],
   ),
   ManualSectionContent(
+    entryId: '5-9-multipass',
+    blocks: [
+      ManualContentBlock.note(
+        '주의사항\n이 기능은 현재 개발 중이며 오작동할 수 있습니다. (현재 이 기능만 사용할 수 있습니다.)\n용접 명령과 함께 사용하지 않으면 가속/감속 오류가 발생할 수 있으므로 용접 명령을 함께 삽입하여 확인하는 것이 좋습니다.\n다음 슬라이드에 설명된 방법 외에는 사용하지 않는 것이 좋습니다.',
+      ),
+      ManualContentBlock.heading('사용방법'),
+      ManualContentBlock.annotatedImage(
+        'assets/rbx-screens/extension-multipass.png',
+        caption: 'Multi Pass setup screen',
+        maxWidth: 600,
+        markers: [
+          ManualImageMarker(label: '3', alignment: Alignment(-0.7, -0.85)),
+          ManualImageMarker(label: '4', alignment: Alignment(-1, -0.1)),
+          ManualImageMarker(label: '5', alignment: Alignment(-1, 0.4)),
+        ],
+      ),
+      ManualContentBlock.bullets([
+        '1. 오른쪽 상단 이미지와 같이 직선 용접을 가르치고, 3점 직선 용접을 가르칩니다.',
+        '2. 확장 메뉴 -> 멀티패스를 클릭하여 멀티패스 메뉴로 들어갑니다.',
+        '3. 범위(라인 번호)에 적용할 범위를 결정하고 가져오기 버튼(Get)을 클릭합니다. (용접 포인트가 아닌 지점은 범위에 포함되지 않습니다.)',
+      ]),
+      ManualContentBlock.image(
+        'assets/rbx-screens/extension-multipass-pout-example.png',
+        maxWidth: 250,
+      ),
+      ManualContentBlock.bullets([
+        '4. 로봇을 원하는 방향으로 움직여 P1 Pass를 기반으로 다중 경로를 만들고 Apply 버튼을 클릭하여 적용합니다. 녹색 점이 표시되면 녹색 선을 통과하고, 빨간색 점이 표시되면 빨간색 선을 통과합니다.',
+        '5. Pass 1 항목에 원하는 길이를 입력합니다. 다중 경로를 추가하려면 녹색 사각형 상자의 버튼( Pass 추가 )을 클릭하여 추가합니다. 예: Y 10, Z 0',
+        '6. 모든 작업이 완료되면 화면 스텝에 Multi Pass 스텝이 생성됩니다.',
+      ]),
+    ],
+  ),
+  ManualSectionContent(
     entryId: '6-1-rblog-download',
     blocks: [
       ManualContentBlock.paragraph(
@@ -586,9 +694,9 @@ const manualSectionContents = <ManualSectionContent>[
         maxWidth: 300,
       ),
       ManualContentBlock.bullets([
-        '① 출력할 채널(예: 2, 3, 4, 5번)을 클릭하면 주황색으로 활성화됩니다.',
-        '② [On] 버튼을 누르면 선택한 출력이 작동합니다.',
-        '③ [Off] 버튼을 누르면 모든 채널이 일괄 OFF 됩니다.',
+        '1. 출력할 채널(예: 2, 3, 4, 5번)을 클릭하면 주황색으로 활성화됩니다.',
+        '2. [On] 버튼을 누르면 선택한 출력이 작동합니다.',
+        '3. [Off] 버튼을 누르면 모든 채널이 일괄 OFF 됩니다.',
       ]),
       ManualContentBlock.paragraph(
         'Analog Output은 On/Off 제어 외에 0~10V 범위의 출력 전압 값을 직접 설정하여 사용할 수 있습니다.',
@@ -611,6 +719,13 @@ const manualSectionContents = <ManualSectionContent>[
       ManualContentBlock.note(
         'P1, P2, P3 버튼을 순서대로 눌러 예약하면 P1이 종료된 뒤 P2, 이어서 P3가 자동으로 실행됩니다.',
       ),
+      ManualContentBlock.image(
+        'assets/rbx-screens/tool-scheduler-button-map.png',
+        maxWidth: 400,
+      ),
+      ManualContentBlock.paragraph(
+        'LED Ch.을 설정하면 Dout신호에 LED를 연결하여 P1-P4프로그램의 실행 및 예약 상태를 LED로 표시할 수 있습니다(실행중- 점멸, 예약중-점등)',
+      ),
       ManualContentBlock.heading('사용 방법'),
       ManualContentBlock.annotatedImage(
         'assets/rbx-screens/tool-scheduler.png',
@@ -623,9 +738,9 @@ const manualSectionContents = <ManualSectionContent>[
         ],
       ),
       ManualContentBlock.bullets([
-        '① [Load] 버튼을 눌러 실행할 WSL 파일을 최대 4개까지 등록합니다.',
-        '② [Configuration Buttons]를 눌러 외부 스위치를 원하는 채널에 할당합니다.',
-        '③ 화면 하단의 빨간색 [Upload and Start] 버튼을 눌러 설정을 적용하고 실행을 준비합니다.',
+        '1. [Load] 버튼을 눌러 실행할 WSL 파일을 최대 4개까지 등록합니다.',
+        '2. [Configuration Buttons]를 눌러 외부 스위치를 원하는 채널에 할당합니다.',
+        '3. 화면 하단의 빨간색 [Upload and Start] 버튼을 눌러 설정을 적용하고 실행을 준비합니다.',
       ]),
       ManualContentBlock.paragraph(
         '이후 외부 스위치 버튼을 눌러 연결된 I/O Din 신호가 들어오면 등록된 프로그램이 순차적으로 실행 또는 예약되며, 일시정지 버튼으로 실행을 일시정지하거나 재개할 수 있습니다.',
@@ -682,13 +797,443 @@ const manualSectionContents = <ManualSectionContent>[
       ),
       ManualContentBlock.heading('사용 방법'),
       ManualContentBlock.bullets([
-        '① 곡선 이동의 시작점은 Move L 명령으로 등록합니다.',
-        '② 곡선 경로를 따라갈 포인트는 모두 Move C 명령으로 등록합니다.',
-        '③ Weld Start 명령은 시작점 바로 아래에 삽입합니다.',
-        '④ Weld End 명령은 마지막 Move C 명령 바로 아래에 위치시킵니다.',
+        '1. 곡선 이동의 시작점은 Move L 명령으로 등록합니다.',
+        '2. 곡선 경로를 따라갈 포인트는 모두 Move C 명령으로 등록합니다.',
+        '3. Weld Start 명령은 시작점 바로 아래에 삽입합니다.',
+        '4. Weld End 명령은 마지막 Move C 명령 바로 아래에 위치시킵니다.',
       ]),
       ManualContentBlock.note(
         '곡선 경로를 구성할 때는 시작점과 끝점을 포함해 최소 4개의 포인트가 필요합니다. 예) L-C-C-C / E E / L-C-C-C-C',
+      ),
+    ],
+  ),
+  ManualSectionContent(
+    entryId: '9-1-welder-kemppi-mig',
+    blocks: [
+      ManualContentBlock.heading('Kemppi (MIG)'),
+      ManualContentBlock.note(
+        '주의사항\n\n용접기와 로봇은 동일한 네트워크(주소), 라우터에 연결되어야 합니다.\n캠피 용접기를 사용할 때 연결이 간혹 끊어지는 경우가 발생할 수 있는데 이런 경우에는 캠피 용접기의 전원을 꺼준 후 다시 켜서 부팅된 후 연결하면 다시 연결이 됩니다.',
+      ),
+      ManualContentBlock.heading('설정방법'),
+      ManualContentBlock.annotatedImage(
+        'assets/rbx-screens/kemppi-systemset.png',
+        maxWidth: 600,
+        caption: 'Kemppi 용접기 설정(System Set)',
+        markers: [
+          ManualImageMarker(label: '1', alignment: Alignment(-1, -0.7)),
+          ManualImageMarker(label: '2', alignment: Alignment(-0.4, -0.1)),
+          ManualImageMarker(label: '2', alignment: Alignment(0.3, -0.1)),
+          ManualImageMarker(label: '3', alignment: Alignment(0.55, 0.72)),
+        ],
+      ),
+      ManualContentBlock.bullets([
+        '1. Setup -> System Set',
+        '2. Welding Type -> MIG, Welder Model -> Kemppi',
+        '3. Scroll down -> Apply(적용 버튼을 눌러야만 수정한 내용이 적용됨)',
+        '4. Welding Set을 누릅니다.',
+        '5. Welding Set 페이지에서 시작 및 끝 페이지를 원하는 값으로 설정합니다.',
+      ]),
+      ManualContentBlock.heading('Welding Set 설정 방법'),
+      ManualContentBlock.bullets([
+        '1. Start',
+      ]),
+      ManualContentBlock.image(
+        'assets/rbx-screens/kemppi-welder-start.png',
+        maxWidth: 400,
+        caption: 'Kemppi Welding Set - Start',
+      ),
+      ManualContentBlock.bullets([
+        'Pre Wait(sec) - 로봇이 용접 시작점에 도착 후 아크 발생시키기 전 대기시간',
+        'Arc Stanby(sec) - 아크가 발생할 때까지의 대기 시간(일반적으로 3초로 설정할 것을 권장)',
+        'Post Wait(sec) - 아크가 발생한 후에 이 시간만큼 대기 후 로봇이 이동을 시작',
+        'Method - 용접 방법을 설정(아래 설명 계속)',
+        'Memory - 사용하려는 용접기 메모리 채널을 입력',
+        'Feed Speed(m/min) - 용접기의 와이어 송급 속도를 입력',
+        'Volt.(V) - 용접 전압 값을 설정',
+        'Robot Speed(mm/s) - 용접 섹션에서 로봇 속도를 설정',
+        'dynamics - 용접 아크 응답을 제어(높음 = 더 빠름, 더 낮음 = 더 부드러움).',
+      ]),
+      ManualContentBlock.heading('Method(용접 방법)'),
+      ManualContentBlock.paragraph(
+        'Kemppi 용접기 용접명령에는 세 가지 방법이 있습니다.',
+      ),
+      ManualContentBlock.heading('1. Mem w/ Adj.'),
+      ManualContentBlock.image(
+        'assets/rbx-screens/kemppi-mem-w-adj.png',
+        maxWidth: 300,
+      ),
+      ManualContentBlock.paragraph(
+        '메모리에 저장된 조건을 기본으로 하며 Fine tune, Feed Speed, Dynamic 등의 값을 조절할 수 있음',
+      ),
+      ManualContentBlock.heading('2. Mem w/o Adj.'),
+      ManualContentBlock.image(
+        'assets/rbx-screens/kemppi-mem-wo-adj.png',
+        maxWidth: 300,
+      ),
+      ManualContentBlock.paragraph(
+        '메모리에 저장된 조건대로만 사용하며 Robot Speed 외의 값은 UI에서 조절할 수 없음',
+      ),
+      ManualContentBlock.heading('3. Manual'),
+      ManualContentBlock.image(
+        'assets/rbx-screens/kemppi-manual.png',
+        maxWidth: 300,
+      ),
+      ManualContentBlock.paragraph(
+        '사용자가 직접 모든 값을 입력하여 설정',
+      ),
+      ManualContentBlock.bullets([
+        '2. End',
+      ]),
+      ManualContentBlock.image(
+        'assets/rbx-screens/kemppi-welder-end.png',
+        maxWidth: 400,
+        caption: 'Kemppi Welding Set - End',
+      ),
+      ManualContentBlock.bullets([
+        'Pre Wait(sec) - 로봇이 용접 중 용접종료 지점에 도착한 후 아크를 종료하기 전에 대기하는 시간',
+      ]),
+      ManualContentBlock.heading('간단한 직선 용접의 예'),
+      ManualContentBlock.annotatedImage(
+        'assets/rbx-screens/kemppi-example.png',
+        maxWidth: 520,
+        caption: '직선 용접 예시(명령 구성)',
+        markers: [
+          ManualImageMarker(label: '1', alignment: Alignment(-1, -1)),
+          ManualImageMarker(label: '2', alignment: Alignment(-1, -0.4)),
+          ManualImageMarker(label: '3', alignment: Alignment(-1, 0.25)),
+          ManualImageMarker(label: '4', alignment: Alignment(-1, 0.9)),
+        ],
+      ),
+      ManualContentBlock.bullets([
+        '1. 용접 시작 전 시작점',
+        '2. 용접 시작',
+        '3. 용접 종료 전 끝점',
+        '4. 용접 종료',
+      ]),
+      ManualContentBlock.note(
+        '용접 시작 스탭과 용접 종료 스탭이 한쌍으로 있어야 합니다. 명령이 누락된 경우 오류가 발생합니다.',
+      ),
+      ManualContentBlock.heading('용접 중 조건변경기능'),
+      ManualContentBlock.paragraph(
+        '이 기능은 용접이 진행되는 도중에 실시간으로 와이어 송급 속도와 세부 조정 값을 변경할 수 있도록 도와줍니다.',
+      ),
+      ManualContentBlock.note(
+        '(현 버전에서는 Kemppi 용접 모드에서만 동작합니다. 추후 업데이트 예정)',
+      ),
+      ManualContentBlock.image(
+        'assets/rbx-screens/kemppi-weld-adjust.png',
+        maxWidth: 450,
+        caption: 'Weld-Adjust(용접 중 조건 변경)',
+      ),
+      ManualContentBlock.bullets([
+        'Memory Add : 적용할 용접기 메모리 채널 번호',
+        'Feed Speed (m/min) : 와이어 송급 속도 설정',
+        'Fine Tune : 미세 조정 값 설정으로, ±10.0 범위 내에서 용접 전압 값을 보정',
+        'Robot Speed(%) : 로봇의 스피드를 -100 ~ 100(%) 의 비율로 변경',
+      ]),
+      ManualContentBlock.bullets([
+        '예) 기존 스피드가 5mm/s이고 100%인 경우 10mm/s로 변경',
+        '예) 기존 스피드가 5mm/s이고 50%인 경우 7.5mm/s로 변경',
+      ]),
+    ],
+  ),
+  ManualSectionContent(
+    entryId: '9-2-welder-weco-mig',
+    blocks: [
+      ManualContentBlock.heading('WECO (MIG)'),
+      ManualContentBlock.note(
+        '주의사항\n\n1. 이 기능은 현재 개발 중이며 문제를 일으킬 수 있습니다.\n2. 일부 기능이 작동하지 않을 수 있으며, 궁금한 점이 있으면 CS팀에 문의하시기 바랍니다.',
+      ),
+      ManualContentBlock.heading('설정방법'),
+      ManualContentBlock.image(
+        'assets/rbx-screens/weco-systemset.png',
+        maxWidth: 600,
+        caption: 'WECO 용접기 설정(System Set)',
+      ),
+      ManualContentBlock.bullets([
+        '1. 용접기에 연결하려면, MIG 설정, 올바른 로봇 모델(일반적으로 RB_U) 및 용접기 모델을 적절한 유형의 WECO에 적용합니다.\n(용접기, 로봇, 태블릿은 동일한 네트워크 환경에 있어야 합니다. 그리고 192.168.0.X 범위의 IP 주소를 사용해야 합니다.)',
+        '2. 설정을 완료했다면 아래로 스크롤하여 Apply(적용) 버튼을 누릅니다.\n(적용 버튼을 누르지 않으면 이전 설정으로 회귀됩니다.)',
+      ]),
+      ManualContentBlock.heading('Welding Set 설정 방법'),
+      ManualContentBlock.image(
+        'assets/rbx-screens/weco-welder-start.png',
+        maxWidth: 400,
+        caption: 'Weco Welding Set - Start',
+      ),
+      ManualContentBlock.paragraph(
+        '3. 다음으로 용접기의 설정을 바꿔줍니다.\nSet -> Welding Set를 누릅니다. 그러면 시작 페이지가 나타납니다. 여기에 표시된 대로 원하는 값으로 설정합니다.',
+      ),
+      ManualContentBlock.note(
+        '주의. Arc Stanby(초)를 수정하는건 권장하지않습니다.',
+      ),
+      ManualContentBlock.image(
+        'assets/rbx-screens/weco-welder-jobmode.png',
+        maxWidth: 200,
+        caption: 'Work Mode - JobMode',
+      ),
+      ManualContentBlock.paragraph(
+        '3-1. None 모드와 달리 JobMode는 용접기에 저장된 값을 검색합니다.\n\n그리고 다른 모드의 경우 공백에 적절한 값을 다음과 같이 넣어야 합니다.\n\n오른쪽 사진에 나와 있습니다. (사진에 표시된 값은 테스트값이므로 권장값은 아닙니다.)\n\n그리고 하단에 doublePulsed, kdeepon 기능은 동시에 사용할 수 없습니다.',
+      ),
+      ManualContentBlock.image(
+        'assets/rbx-screens/weco-welder-end.png',
+        maxWidth: 400,
+        caption: 'Weco Welding Set - End',
+      ),
+      ManualContentBlock.paragraph(
+        '4. 다음은 용접 설정 종료 페이지입니다. 원하는 값을 입력할 수 있습니다.\n\n(용접기 페이지에는 현재 기능이 없습니다.)',
+      ),
+      ManualContentBlock.heading('직선 용접 예시'),
+      ManualContentBlock.image(
+        'assets/rbx-screens/weco-example.png',
+        maxWidth: 520,
+        caption: '직선 용접 예시(명령 구성)',
+      ),
+      ManualContentBlock.paragraph(
+        '5. 설정이 완료되면 직선 용접을 예로 들어 설명해 드리겠습니다.\n직선 용접의 기본 단계입니다. 시작점 -> 용접 시작 -> 끝점 -> 용접 끝\n여기까지 왔다면 Weco 용접기를 사용하는 데 문제가 없습니다.\n(단, 설정을 조정하면서 테스트해야 합니다.)',
+      ),
+    ],
+  ),
+  ManualSectionContent(
+    entryId: '9-3-welder-imt-laser',
+    blocks: [
+      ManualContentBlock.heading('IMT (Laser)'),
+      ManualContentBlock.note(
+        '주의사항\n\n용접기와 PC, 로봇은 동일한 네트워크(주소), 공유기에 연결돼야 합니다.\n반드시 IMT 송급기를 사용해야 합니다.\n연결 후 작동확인을 위해 인칭, 역인칭 기능을 2~3회 정도 체크 후 사용할 것을 권장합니다.',
+      ),
+      ManualContentBlock.heading('설정방법'),
+      ManualContentBlock.annotatedImage(
+        'assets/rbx-screens/imt-systemset.png',
+        maxWidth: 600,
+        caption: 'IMT 용접기 설정(System Set)',
+        markers: [
+          ManualImageMarker(label: '1', alignment: Alignment(-0.58, -0.14)),
+          ManualImageMarker(label: '2', alignment: Alignment(0.55, -0.14)),
+          ManualImageMarker(label: '3', alignment: Alignment(0.82, 0.82)),
+        ],
+      ),
+      ManualContentBlock.bullets([
+        '1. Setup -> System Set',
+        '2. Welding Type - LASER, Welder Model -> IMT',
+        '3. Scroll down Apply(Apply 버튼을 눌러야만 수정한 내용이 적용됨)',
+        '4. Welding Set을 누릅니다.',
+        '5. Welding Set 페이지에서 시작 및 끝 페이지를 원하는 값으로 설정합니다.',
+      ]),
+      ManualContentBlock.heading('Welding Set 설정 방법'),
+      ManualContentBlock.bullets([
+        '1. Start',
+      ]),
+      ManualContentBlock.image(
+        'assets/rbx-screens/imt-welder-start.png',
+        maxWidth: 600,
+        caption: 'IMT Welding Set - Start',
+      ),
+      ManualContentBlock.bullets([
+        'Use Wire - 와이어 송급의 사용여부를 설정합니다.',
+        'Wire Align - 와이어 정렬기능의 사용여부를 설정합니다.',
+        'Pre wait (sec) - 아크 발생 전 대기시간입니다.',
+        'Laser Power (%) - 레이저 용접 강도를 설정합니다.',
+        'Wire Wait (sec) - 레이저가 켜지고 나서 이 시간만큼 대기 후 와이어가 송급됩니다.',
+        'Feed Speed (%) - 용접 중에 와이어의 송급속도를 설정합니다.',
+        'Post wait (sec) - 아크 및 와이어 송급 시작 후 이 시간만큼 대기 후 로봇이 이동을 시작합니다.',
+        'Robot Speed (mm/s) - 용접구간에서의 로봇의 속도를 설정합니다.',
+      ]),
+      ManualContentBlock.bullets([
+        '2. End',
+      ]),
+      ManualContentBlock.image(
+        'assets/rbx-screens/imt-welder-end.png',
+        maxWidth: 600,
+        caption: 'IMT Welding Set - End',
+      ),
+      ManualContentBlock.bullets([
+        'Pre Wait (sec) - 로봇이 용접종료 지점에 도착한 후 아크를 종료하기 전, 대기하는 시간',
+        'Laser Power (%) - 크레이터 구간에서의 레이저 파워를 결정합니다.',
+        'Crater Fill (sec) - 크레이터 시간을 설정합니다.',
+        'Post wait (sec) - 아크가 꺼지고 이 시간만큼 로봇이 대기후, 다음 스탭을 수행합니다.',
+      ]),
+      ManualContentBlock.bullets([
+        '3. Welder',
+      ]),
+      ManualContentBlock.image(
+        'assets/rbx-screens/imt-welder-welder.png',
+        maxWidth: 600,
+        caption: 'IMT Welding Set - Welder',
+      ),
+      ManualContentBlock.bullets([
+        'Arc On Ch. - 아크온 신호를 할당합니다. (D.out)',
+        'Gas Check Ch. - 가스 신호를 할당합니다. (D.out)',
+        'Relay On Ch. - 릴레이 신호를 할당합니다. (D.out)(와이어 정렬기능을 사용할 때 필요한 신호입니다.)',
+        'Relay Input Ch. - 릴레이 인풋 신호를 할당합니다. (D.in)(와이어 정렬기능을 사용할 때 필요한 신호입니다.)',
+        'Back Speed, Back Time - 역인칭 속도를 설정하고 Back time만큼 역인칭 합니다. (용접 종료시 수행됩니다.)',
+        'Fwd Speed, Fwd Time - 인칭 속도를 설정하고 Fwd time만큼 인칭 합니다. (용접 종료시 역인칭 후 수행됩니다.)',
+      ]),
+      ManualContentBlock.heading('전류/전압 채널 설정'),
+      ManualContentBlock.image(
+        'assets/rbx-screens/imt-welder-curr-ch.png',
+        maxWidth: 420,
+        caption: 'Current channel settings',
+      ),
+      ManualContentBlock.bullets([
+        'Curr. Signal Range - 전류값 조절을 위해 사용할 제어박스 출력(A.out) 범위를 설정합니다. (일반적으로 10V를 사용합니다.)',
+        'Current Ch. - 전류값 채널을 설정합니다. (A.out)',
+        'Current Range - 용접명령에서 사용할 전류값의 범위를 설정합니다.',
+        '설정한 범위에 비례하여 0~10V의 전압이 출력됩니다.',
+      ]),
+      ManualContentBlock.bullets([
+        '예) 10V 사용시 범위를 0-100 설정하고 용접명령에 50을 사용하면 5V의 전압이 출력됩니다.',
+      ]),
+      ManualContentBlock.image(
+        'assets/rbx-screens/imt-welder-volt-ch.png',
+        maxWidth: 420,
+        caption: 'Voltage channel settings',
+      ),
+      ManualContentBlock.bullets([
+        'Volt. Signal Range - 전압값 조절을 위해 사용할 제어박스 출력(A.out) 범위를 설정합니다. (일반적으로 10V를 사용합니다.)',
+        'Voltage Ch. - 전압값의 채널을 설정합니다. (A.out)',
+        'Voltage Range - 전압값의 범위를 설정합니다.',
+        '(위에 설명된 전류값 범위와 동일하게 작동합니다.)',
+      ]),
+      ManualContentBlock.heading('간단한 직선 용접의 예'),
+      ManualContentBlock.annotatedImage(
+        'assets/rbx-screens/imt-example.png',
+        maxWidth: 520,
+        caption: '직선 용접 예시(명령 구성)',
+        markers: [
+          ManualImageMarker(label: '1', alignment: Alignment(-1, -1)),
+          ManualImageMarker(label: '2', alignment: Alignment(-1, -0.4)),
+          ManualImageMarker(label: '3', alignment: Alignment(-1, 0.25)),
+          ManualImageMarker(label: '4', alignment: Alignment(-1, 0.9)),
+        ],
+      ),
+      ManualContentBlock.bullets([
+        '1. 용접 시작 전 시작점',
+        '2. 용접 시작',
+        '3. 용접 종료 전 끝점',
+        '4. 용접 종료',
+      ]),
+      ManualContentBlock.note(
+        '용접 시작 스탭과 용접 종료 스탭이 한쌍으로 있어야 합니다. 명령이 누락된 경우 오류가 발생합니다.',
+      ),
+    ],
+  ),
+  ManualSectionContent(
+    entryId: '9-4-welder-maven-laser',
+    blocks: [
+      ManualContentBlock.heading('Maven (Laser)'),
+      ManualContentBlock.note(
+        '주의사항\n\n용접기와 PC, 로봇은 동일한 네트워크(주소), 공유기에 연결돼야 합니다.\n반드시 Maven 용접기를 사용해야 하며 송급기는 별도로 제어박스에 연결해서 용접기 설정에서 신호를 할당해야합니다.\n연결 후 작동확인을 위해 가스체크 기능을 2~3회 정도 체크하는 것을 권장합니다.',
+      ),
+      ManualContentBlock.heading('설정방법'),
+      ManualContentBlock.annotatedImage(
+        'assets/rbx-screens/maven-systemset.png',
+        maxWidth: 600,
+        caption: 'Maven 용접기 설정(System Set)',
+        markers: [
+          ManualImageMarker(label: '1', alignment: Alignment(-0.62, -0.14)),
+          ManualImageMarker(label: '2', alignment: Alignment(0.5, -0.14)),
+          ManualImageMarker(label: '3', alignment: Alignment(0.85, 0.82)),
+        ],
+      ),
+      ManualContentBlock.bullets([
+        '1. Setup -> System Set',
+        '2. Welding Type -> LASER, Welder Model -> MAVEN',
+        '3. Apply(Apply 버튼을 눌러야만 수정한 내용이 적용됨)',
+        '4. Welding Set을 누릅니다.',
+        '5. Welding Set 페이지에서 시작 및 끝 페이지를 원하는 값으로 설정합니다.',
+      ]),
+      ManualContentBlock.heading('Welding Set 설정 방법'),
+      ManualContentBlock.bullets([
+        '1. Start',
+      ]),
+      ManualContentBlock.image(
+        'assets/rbx-screens/maven-welder-start.png',
+        maxWidth: 600,
+        caption: 'Maven Welding Set - Start',
+      ),
+      ManualContentBlock.bullets([
+        'Use Wire - 와이어 송급의 사용여부를 설정합니다.',
+        'Wire Align - 와이어 정렬기능의 사용여부를 설정합니다.',
+        'Pre flow (sec) - 아크 발생전 초기가스 분출 시간입니다.',
+        'Laser Power (%) - 레이저 용접 강도를 설정합니다.',
+        'Wire Wait (sec) - 레이저가 켜지고나서 이시간만큼 대기후 와이어가 송급됩니다.',
+        'Feed Speed (%) - 용접 중에 와이어의 송급속도를 결정합니다.',
+        'Post flow (sec) - 아크, 와이어가 송급된 후 이 시간만큼 대기후 로봇이 이동을 시작합니다.',
+        'Robot Speed (mm/s) - 용접구간에서의 로봇의 속도를 설정합니다.',
+      ]),
+      ManualContentBlock.bullets([
+        '2. End',
+      ]),
+      ManualContentBlock.image(
+        'assets/rbx-screens/maven-welder-end.png',
+        maxWidth: 600,
+        caption: 'Maven Welding Set - End',
+      ),
+      ManualContentBlock.bullets([
+        'Pre flow (sec) - 로봇이 용접종료 지점에 도착한 후 아크를 종료하기 전, 대기하는 시간',
+        'Laser Power (%) - 크레이터를 설정했을때의 레이저 파워를 결정합니다.',
+        'Crater Fill (sec) - 크레이터 시간을 설정합니다.',
+        'Post flow (sec) - 아크가 꺼지고 이 시간만큼 가스를 분출하며 로봇이 대기후, 다음 스탭을 수행합니다.',
+      ]),
+      ManualContentBlock.bullets([
+        '3. Welder',
+      ]),
+      ManualContentBlock.image(
+        'assets/rbx-screens/maven-welder-welder.png',
+        maxWidth: 600,
+        caption: 'Maven Welding Set - Welder',
+      ),
+      ManualContentBlock.bullets([
+        'Arc On Ch. - 아크온 신호를 할당합니다. (D.out)',
+        'Gas Ch. - 가스 신호를 할당합니다. (D.out)',
+        'Inching Ch. - 와이어 인칭 신호를 할당합니다. (D.out)',
+        'Reverse Inching Ch. - 와이어 역인칭 신호를 할당합니다. (D.out)',
+        'Relay On Ch. - 릴레이 신호를 할당합니다. (D.out)(와이어 정렬기능을 사용할 때 필요한 신호입니다.)',
+        'Relay Input Ch. - 릴레이 신호를 할당합니다. (D.out)(와이어 정렬기능을 사용할 때 필요한 신호입니다.)',
+        'Auto Feed Ch. - 자동 송급 신호를 할당합니다. (D.out)',
+      ]),
+      ManualContentBlock.heading('레이저 파워/송급기 채널 설정'),
+      ManualContentBlock.image(
+        'assets/rbx-screens/maven-welder-laserpowerrange.png',
+        maxWidth: 420,
+        caption: 'Laser Power range settings',
+      ),
+      ManualContentBlock.bullets([
+        'Laser Power Range - 레이저 파워의 조절을 위해 사용될 제어박스 출력(A.out) 범위를 설정합니다. (일반적으로 10V를 사용합니다.)',
+        'Laser Power Ch. - 레이저 파워 채널을 설정합니다. (A.out)',
+        'Laser Power Range - 용접명령에서 사용할 레이저 파워의 범위를 설정합니다. 설정한 범위에 비례하여 0~10V의 전압이 출력됩니다.',
+        '예) 10V사용시 범위를 0-100 설정하고 용접명령에 50을 사용하면 5V의 전압이 출력됩니다.',
+      ]),
+      ManualContentBlock.image(
+        'assets/rbx-screens/maven-welder-feederspeedrange.png',
+        maxWidth: 420,
+        caption: 'Feeder speed range settings',
+      ),
+      ManualContentBlock.bullets([
+        'Feeder Speed Range - 송급기 속도 범위를 설정합니다.',
+        'Feeder Speed Ch. - 송급기 속도 채널을 설정합니다. (A.out)',
+        'Feeder Speed Range - 송급기 속도의 범위를 설정합니다.(위에 설명된 레이저 파워 범위와 동일하게 작동합니다.)',
+      ]),
+      ManualContentBlock.heading('티칭 방법'),
+      ManualContentBlock.heading('간단한 직선용접의 예.'),
+      ManualContentBlock.annotatedImage(
+        'assets/rbx-screens/maven-example.png',
+        maxWidth: 520,
+        caption: '직선 용접 예시(명령 구성)',
+        markers: [
+          ManualImageMarker(label: '1', alignment: Alignment(-1, -1)),
+          ManualImageMarker(label: '2', alignment: Alignment(-1, -0.4)),
+          ManualImageMarker(label: '3', alignment: Alignment(-1, 0.25)),
+          ManualImageMarker(label: '4', alignment: Alignment(-1, 0.9)),
+        ],
+      ),
+      ManualContentBlock.bullets([
+        '1. 용접 시작 전 시작점',
+        '2. 용접 시작',
+        '3. 용접 종료 전 끝점',
+        '4. 용접 종료',
+      ]),
+      ManualContentBlock.note(
+        '용접 시작 스탭과 용접 종료 스탭이 한쌍으로 있어야 합니다. 명령이 누락된 경우 오류가 발생합니다.',
       ),
     ],
   ),

@@ -12,12 +12,15 @@ class ManualContentView extends StatelessWidget {
     this.content,
     this.padding = const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
     this.onSelect,
+    this.emptyContentText =
+        '섹션 콘텐츠를 여기에 작성하세요. 텍스트, 이미지, 표 등을 자유롭게 구성할 수 있습니다.',
   });
 
   final ManualEntry entry;
   final ManualSectionContent? content;
   final EdgeInsetsGeometry padding;
   final ValueChanged<ManualEntry>? onSelect;
+  final String emptyContentText;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,7 @@ class ManualContentView extends StatelessWidget {
             ..._buildChildSummary(entry)
           else ...[
             Text(
-              '섹션 콘텐츠를 여기에 작성하세요. 텍스트, 이미지, 표 등을 자유롭게 구성할 수 있습니다.',
+              emptyContentText,
               style: AppTypography.bodyMedium,
             ),
             const SizedBox(height: 24),

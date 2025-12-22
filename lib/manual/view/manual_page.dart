@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
-import '../data/manual_content.dart';
-import '../data/manual_toc.dart';
+import '../data/manual_content.dart' as ko;
+import '../data/manual_content_en.dart' as en;
+import '../data/manual_toc.dart' as ko_toc;
+import '../data/manual_toc_en.dart' as en_toc;
 import '../models/manual_content.dart';
 import '../models/manual_section.dart';
 import 'widgets/manual_content.dart';
@@ -17,13 +19,15 @@ class ManualPage extends StatefulWidget {
 }
 
 class _ManualPageState extends State<ManualPage> {
-  late final List<ManualNavItem> _navItems;
+  late List<ManualNavItem> _navItems;
   late ManualEntry _selectedEntry;
+  late String _lang;
 
   @override
   void initState() {
     super.initState();
-    _navItems = _buildNavItems(manualToc);
+    _lang = ko.kAppLang;
+    _navItems = _buildNavItems(_tocForLang(_lang));
     _selectedEntry = _navItems.first.entry;
   }
 
@@ -32,17 +36,28 @@ class _ManualPageState extends State<ManualPage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isCompact = constraints.maxWidth < 900;
+        final contentList = _contentsForLang(_lang);
         if (isCompact) {
           return _CompactManualPage(
             navItems: _navItems,
             selectedEntry: _selectedEntry,
             onSelect: _onSelect,
+            lang: _lang,
+            onLangChanged: _onLangChanged,
+            contentList: contentList,
           );
         }
 
         return Scaffold(
           appBar: AppBar(
             title: const Text('RB X Manual'),
+            actions: [
+              _LanguageDropdown(
+                value: _lang,
+                onChanged: _onLangChanged,
+              ),
+              const SizedBox(width: 8),
+            ],
           ),
           body: Row(
             children: [
@@ -61,10 +76,16 @@ class _ManualPageState extends State<ManualPage> {
                     Expanded(
                       child: ManualContentView(
                         entry: _selectedEntry,
-                        content: _findSectionContent(_selectedEntry.id),
+                        content: _findSectionContent(
+                          _selectedEntry.id,
+                          contentList,
+                        ),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 32, vertical: 36),
                         onSelect: _onSelect,
+                        emptyContentText: _lang == 'en'
+                            ? 'Write the section content here. You can freely compose text, images, tables, etc.'
+                            : '섹션 콘텐츠를 여기에 작성하세요. 텍스트, 이미지, 표 등을 자유롭게 구성할 수 있습니다.',
                       ),
                     ),
                     Builder(builder: (context) {
@@ -102,6 +123,31 @@ class _ManualPageState extends State<ManualPage> {
     });
   }
 
+  void _onLangChanged(String lang) {
+    if (lang == _lang) return;
+    setState(() {
+      final prevId = _selectedEntry.id;
+      _lang = lang;
+      _navItems = _buildNavItems(_tocForLang(_lang));
+      final matched = _navItems
+          .where((i) => i.entry.id == prevId)
+          .map((i) => i.entry)
+          .toList();
+      _selectedEntry =
+          matched.isNotEmpty ? matched.first : _navItems.first.entry;
+    });
+  }
+
+  List<ManualEntry> _tocForLang(String lang) {
+    return lang == 'en' ? en_toc.manualTocEn : ko_toc.manualToc;
+  }
+
+  List<ManualSectionContent> _contentsForLang(String lang) {
+    return lang == 'en'
+        ? en.manualSectionContentsEn
+        : ko.manualSectionContentsKo;
+  }
+
   List<ManualNavItem> _buildNavItems(List<ManualEntry> entries,
       {int depth = 0}) {
     final items = <ManualNavItem>[];
@@ -115,8 +161,11 @@ class _ManualPageState extends State<ManualPage> {
   }
 }
 
-ManualSectionContent? _findSectionContent(String entryId) {
-  for (final section in manualSectionContents) {
+ManualSectionContent? _findSectionContent(
+  String entryId,
+  List<ManualSectionContent> sections,
+) {
+  for (final section in sections) {
     if (section.entryId == entryId) {
       return section;
     }
@@ -129,11 +178,17 @@ class _CompactManualPage extends StatefulWidget {
     required this.navItems,
     required this.selectedEntry,
     required this.onSelect,
+    required this.lang,
+    required this.onLangChanged,
+    required this.contentList,
   });
 
   final List<ManualNavItem> navItems;
   final ManualEntry selectedEntry;
   final ValueChanged<ManualEntry> onSelect;
+  final String lang;
+  final ValueChanged<String> onLangChanged;
+  final List<ManualSectionContent> contentList;
 
   @override
   State<_CompactManualPage> createState() => _CompactManualPageState();
@@ -148,6 +203,13 @@ class _CompactManualPageState extends State<_CompactManualPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('RB X Manual'),
+        actions: [
+          _LanguageDropdown(
+            value: widget.lang,
+            onChanged: widget.onLangChanged,
+          ),
+          const SizedBox(width: 8),
+        ],
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
@@ -169,8 +231,51 @@ class _CompactManualPageState extends State<_CompactManualPage> {
       ),
       body: ManualContentView(
         entry: widget.selectedEntry,
-        content: _findSectionContent(widget.selectedEntry.id),
+        content:
+            _findSectionContent(widget.selectedEntry.id, widget.contentList),
+        emptyContentText: widget.lang == 'en'
+            ? 'Write the section content here. You can freely compose text, images, tables, etc.'
+            : '섹션 콘텐츠를 여기에 작성하세요. 텍스트, 이미지, 표 등을 자유롭게 구성할 수 있습니다.',
       ),
+    );
+  }
+}
+
+class _LanguageDropdown extends StatelessWidget {
+  const _LanguageDropdown({
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String value;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          'Language',
+          style: const TextStyle(color: Colors.white),
+        ),
+        const SizedBox(width: 12),
+        DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            value: value,
+            style: const TextStyle(color: Colors.white),
+            iconEnabledColor: Colors.white,
+            dropdownColor: Colors.black87,
+            onChanged: (v) {
+              if (v == null) return;
+              onChanged(v);
+            },
+            items: const [
+              DropdownMenuItem(value: 'ko', child: Text('한국어')),
+              DropdownMenuItem(value: 'en', child: Text('English')),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
