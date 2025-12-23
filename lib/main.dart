@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     print('test');
     return MaterialApp(
-      title: 'RB X Manual',
+      title: 'RB X Manual - Test',
       theme: AppTheme.light(),
       debugShowCheckedModeBanner: false,
       home: const ManualPage(),
